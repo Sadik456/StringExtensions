@@ -1,5 +1,6 @@
 # Azure DevOps CI Pipeline - Q1: Build, Pack, and Push NuGet Package
 
+
 trigger:
   branches:
     include:
@@ -44,7 +45,7 @@ steps:
       command: 'pack'
       packagesToPack: '**/StringExtensions.csproj'
       configuration: '$(buildConfiguration)'
-      versioningScheme: 'byBuildNumber'
+      versioningScheme: 'off'
 
   # Step 5: Push the NuGet package to Azure Artifacts Feed
   - task: DotNetCoreCLI@2
