@@ -1,5 +1,5 @@
 # Azure DevOps CI Pipeline - Q1: Build, Pack, and Push NuGet Package
-
+# Store this file at the root of your GitHub repo
 
 trigger:
   branches:
@@ -7,12 +7,14 @@ trigger:
       - main
 
 pool:
-  name: Default          
+  name: Default          # <-- Name of your Self-Hosted Agent Pool
 
 variables:
   buildConfiguration: 'Release'
-  # Replace with your Azure Artifacts feed name
-  feedName: 'StringExtensionsFeed'
+  # Format: 'ProjectName/FeedName' for project-scoped feeds
+  # OR just 'FeedName' for organization-scoped feeds
+  # Find your feed name in Azure DevOps > Artifacts > your feed > Connect to feed
+  feedName: 'StringExtensions/StringExtensionsFeed'
 
 steps:
   # Step 1: Restore NuGet dependencies
