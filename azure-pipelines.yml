@@ -1,0 +1,58 @@
+# Azure DevOps CI Pipeline - Q1: Build, Pack, and Push NuGet Package
+# Store this file at the root of your GitHub repo
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  name: StringExtensionsFeed          
+
+variables:
+  buildConfiguration: 'Release'
+  # Replace with your Azure Artifacts feed name
+  feedName: 'StringExtensionsFeed'
+
+steps:
+  # Step 1: Restore NuGet dependencies
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet packages'
+    inputs:
+      command: 'restore'
+      projects: 'StringExtensions/StringExtensions.csproj'
+
+  # Step 2: Build the class library
+  - task: DotNetCoreCLI@2
+    displayName: 'Build StringExtensions library'
+    inputs:
+      command: 'build'
+      projects: 'StringExtensions/StringExtensions.csproj'
+      arguments: '--configuration $(buildConfiguration) --no-restore'
+
+  # Step 3: Run unit tests
+  - task: DotNetCoreCLI@2
+    displayName: 'Run unit tests'
+    inputs:
+      command: 'test'
+      projects: 'StringExtensions.Tests/StringExtensions.Tests.csproj'
+      arguments: '--configuration $(buildConfiguration)'
+
+  # Step 4: Pack the NuGet package
+  - task: DotNetCoreCLI@2
+    displayName: 'Pack NuGet package'
+    inputs:
+      command: 'pack'
+      packagesToPack: 'StringExtensions/StringExtensions.csproj'
+      configuration: '$(buildConfiguration)'
+      versioningScheme: 'byBuildNumber'
+
+  # Step 5: Push the NuGet package to Azure Artifacts Feed
+  - task: DotNetCoreCLI@2
+    displayName: 'Push NuGet package to Azure Artifacts'
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: '$(feedName)'
+      allowPackageConflicts: true
