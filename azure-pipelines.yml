@@ -20,14 +20,14 @@ steps:
     displayName: 'Restore NuGet packages'
     inputs:
       command: 'restore'
-      projects: 'StringExtensions/StringExtensions.csproj'
+      projects: 'StringExtensions/*.csproj'
 
   # Step 2: Build the class library
   - task: DotNetCoreCLI@2
     displayName: 'Build StringExtensions library'
     inputs:
       command: 'build'
-      projects: 'StringExtensions/StringExtensions.csproj'
+      projects: 'StringExtensions/*.csproj'
       arguments: '--configuration $(buildConfiguration) --no-restore'
 
   # Step 3: Run unit tests
