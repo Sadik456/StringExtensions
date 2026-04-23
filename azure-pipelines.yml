@@ -1,5 +1,4 @@
 # Azure DevOps CI Pipeline - Q1: Build, Pack, and Push NuGet Package
-# Store this file at the root of your GitHub repo
 
 trigger:
   branches:
@@ -20,14 +19,14 @@ steps:
     displayName: 'Restore NuGet packages'
     inputs:
       command: 'restore'
-      projects: 'StringExtensions/*.csproj'
+      projects: '**/StringExtensions.csproj'
 
   # Step 2: Build the class library
   - task: DotNetCoreCLI@2
     displayName: 'Build StringExtensions library'
     inputs:
       command: 'build'
-      projects: 'StringExtensions/*.csproj'
+      projects: '**/StringExtensions.csproj'
       arguments: '--configuration $(buildConfiguration) --no-restore'
 
   # Step 3: Run unit tests
@@ -35,7 +34,7 @@ steps:
     displayName: 'Run unit tests'
     inputs:
       command: 'test'
-      projects: 'StringExtensions.Tests/StringExtensions.Tests.csproj'
+      projects: '**/StringExtensions.Tests.csproj'
       arguments: '--configuration $(buildConfiguration)'
 
   # Step 4: Pack the NuGet package
@@ -43,7 +42,7 @@ steps:
     displayName: 'Pack NuGet package'
     inputs:
       command: 'pack'
-      packagesToPack: 'StringExtensions/StringExtensions.csproj'
+      packagesToPack: '**/StringExtensions.csproj'
       configuration: '$(buildConfiguration)'
       versioningScheme: 'byBuildNumber'
 
